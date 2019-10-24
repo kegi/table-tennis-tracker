@@ -1,0 +1,19 @@
+body {
+  overflow-x: auto;
+  overflow-y: scroll;
+}
+
+h1 {
+  font-family: 'Open Sans Lite', sans-serif;
+  font-weight: 100;
+}
+
+#container {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+#main {
+  padding: 25px 10px;
+}

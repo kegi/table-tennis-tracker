@@ -1,0 +1,14 @@
+@import '~bootstrap/scss/bootstrap';
+
+#footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  overflow:hidden;
+}
