@@ -21,6 +21,12 @@ yarn start
 ```
 Open http://127.0.0.1:8080
 
+## Features
+
+ - Fully debounced buttons
+ - Hold for 2 sec to cancel last points
+ - Cute animations
+
 ## How to use it ?
 
 Left player is associated with the left click of the mouse and the right player with the right button.
@@ -29,4 +35,7 @@ You can buy a very cheap bluetooth mouse and solder 2 buttons to the mouse mothe
 
 Demo step by step : https://imgur.com/gallery/nkd2X
 
-![Demo photo](https://imgur.com/download/99sNa5M)
+![Demo photo](https://i.imgur.com/HEd3HUY.jpg)
+![Demo photo](https://i.imgur.com/7DWidiP.jpg)
+![Demo photo](https://i.imgur.com/e2aPT0a.jpg)
+![Demo photo](https://i.imgur.com/t41BF5a.jpg)
