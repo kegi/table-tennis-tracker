@@ -6,15 +6,33 @@ This is an application to track the score and service during a match.
 
 Built for fun with **React** and **TypeScript**.
 
+## Installation (application)
+**note 1:** Only tested on Windows 10
 
-## Installation
+**note 2:** Run on PowerShell/CMD, not on WSL ;)
+
+```
+yarn install
+yarn build-windows
+```
+
+The output file **/dist/windows/TableTennisTracker.exe** is a one click installation app (using electron), you can copy paste it wherever you want.
+
+## Installation (web)
 ```bash
 yarn install
 yarn build
 ```
 launch index.html
 
-### Dev build
+### Dev build (application)
+```bash
+yarn install
+yarn start-windows
+```
+App will open itself
+
+### Dev build (web)
 ```bash
 yarn install
 yarn start
@@ -26,6 +44,7 @@ Open http://127.0.0.1:8080
  - Fully debounced buttons
  - Hold for 2 sec to cancel last points
  - Cute animations
+ - Standalone app
 
 ## How to use it ?
 

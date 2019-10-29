@@ -1,15 +1,16 @@
 {
-  "name": "js_boilerplate",
-  "version": "1.0.0",
+  "name": "table-tenis-tracker",
+  "version": "2.0.0",
+  "main": "src/electron.js",
   "license": "MIT",
   "dependencies": {
-    "@babel/plugin-transform-async-to-generator": "^7.5.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-async-to-generator": "^7.5.0",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
@@ -30,6 +31,8 @@
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.0.0",
     "css-modules-typescript-loader": "^2.0.4",
+    "electron": "^7.0.0",
+    "electron-builder": "^21.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.5.1",
@@ -46,7 +49,7 @@
     "jest": "^24.8.0",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.0",
     "popper.js": "^1.15.0",
     "postcss-loader": "^3.0.0",
     "postcss-normalize": "^8.0.1",
@@ -60,10 +63,20 @@
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.9.0"
   },
+  "build": {
+    "appId": "com.kegi.table-tennis-tracker",
+    "directories": {
+      "output": "dist/windows"
+    },
+    "artifactName": "TableTennisTracker.exe",
+    "icon" : "./assets/images/icon.png"
+  },
   "scripts": {
     "start": "webpack-cli --mode=development && webpack-dev-server",
     "build": "webpack-cli --mode=production",
     "check-types": "tsc",
-    "test": "tsc && jest"
+    "test": "tsc && jest",
+    "start-windows": "webpack-cli --mode=development && electron .",
+    "build-windows": "webpack-cli --mode=production && electron-builder"
   }
 }
