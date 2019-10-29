@@ -1,19 +1,471 @@
-body {
-  overflow-x: auto;
-  overflow-y: scroll;
+$playerSeparatorWidth: 3px;
+$playerSeparatorColor: rgba(128, 116, 255, .4);
+$activePlayerAnimationOpacity: .5;
+$activePlayerAnimationDuration: 250ms;
+$serviceMovingSkew: 15deg;
+$serviceMovingScale: .7;
+$serviceMovingOpacity: .6;
+$serviceMovingDuration: 450ms;
+$serviceAnimationDuration: 450ms;
+$playerScoreBoxSize: 20vw;
+$playerScoreDigitHeight: 10vw;
+$playerScoreVerticalVisibility: 3vw;
+$playerScoreAnimationSpeed: 750ms;
+$playerScoreAnimationScale: 0.2;
+$playerScoreAnimationOpacity: 1;
+$playerReadyAnimationScale: 0.96;
+$playerReadyAnimationDuration: 250ms;
+
+body, html {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
 }
 
-h1 {
-  font-family: 'Open Sans Lite', sans-serif;
-  font-weight: 100;
+@keyframes backgroundOpacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-#container {
+.background-video-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #000;
+  overflow: hidden;
+  z-index: -100;
+  transition: opacity 1s;
+
+  &.show-winner {
+    z-index: -99;
+    opacity: 0;
+
+    animation-direction: normal;
+    animation-name: backgroundOpacity;
+    animation-duration: 1s;
+    animation-delay: 500ms;
+    animation-fill-mode: forwards;
+  }
+
+  .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .6;
+
+    @media (min-aspect-ratio: 16/9) {
+      height: 300%;
+      top: -100%;
+    }
+
+    @media (max-aspect-ratio: 16/9) {
+      width: 300%;
+      left: -100%;
+    }
+
+    @media (aspect-ratio: 16/9) {
+      width: 100%;
+      left: 0;
+    }
+  }
+}
+
+.game {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.player-side {
+  display: flex;
+  flex-direction: column;
+  flex: .5;
   position: relative;
-  min-height: 100vh;
-  padding-bottom: 50px;
+  align-items: stretch;
+  border-right: solid $playerSeparatorWidth $playerSeparatorColor;
+
+  &.player-right {
+    border-color: transparent;
+  }
+
+  @keyframes animActivePlayer {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: $activePlayerAnimationOpacity;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    animation-name: animActivePlayer;
+    animation-duration: $activePlayerAnimationDuration;
+  }
+
+  &.with-overlay {
+
+    border-color: transparent;
+    transition: transform $playerReadyAnimationDuration;
+    transform: scale($playerReadyAnimationScale);
+    z-index: 2;
+
+    .player-score-black-box {
+      color: rgba(255, 255, 255, .5);
+    }
+  }
 }
 
-#main {
-  padding: 25px 10px;
+.player-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(5, 156, 51, 0.33);
+}
+
+.player-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-size: 2.8em;
+  text-transform: uppercase;
+  transition: all 1s;
+}
+
+.player-side.player-left .player-name {
+  left: -$playerSeparatorWidth;
+}
+
+$playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScoreVerticalVisibility * 2))) / 2;
+
+.player-score-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.player-score-black-box {
+  position: absolute;
+  top: 50vh;
+  left: 25vw - ($playerScoreBoxSize / 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $playerScoreBoxSize;
+  height: $playerScoreBoxSize;
+  background: rgba(0, 0, 0, .65);
+  color: #fff;
+  font-size: 14em;
+  font-family: 'Righteous', cursive;
+  padding: $playerScoreVerticalVisibility 0;
+  margin-top: -($playerScoreBoxSize / 2);
+  transition: left 500ms;
+}
+
+.player-score-visibility-wrapper {
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.player-score-vertical-container {
+  position: absolute;
+  bottom: $playerScoreDiff;
+  left: 0;
+  width: 100%;
+
+  &.animating {
+    transition: bottom $playerScoreAnimationSpeed;
+    bottom: (-$playerScoreDigitHeight + $playerScoreDiff);
+  }
+}
+
+.player-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: $playerScoreDigitHeight;
+
+  &.score-string {
+    font-size: 0.6em;
+  }
+}
+
+@keyframes digitMoving {
+  from {
+    transform: scale($playerScoreAnimationScale);
+    opacity: $playerScoreAnimationOpacity;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.player-score-vertical-container.animating {
+
+  .player-score {
+
+    animation-name: digitMoving;
+    animation-duration: $playerScoreAnimationSpeed;
+    animation-fill-mode: forwards;
+
+    &:last-child {
+      animation-direction: reverse;
+    }
+  }
+}
+
+.waiting-for-players {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, .4);
+  color: #fff;
+  font-family: "Open Sans", sans-serif;
+  font-size: 3em;
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 1;
+}
+
+.waiting-for-restart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 5vh;
+  left: 0;
+  right: 0;
+  color: rgba(255, 255, 255, .35);
+  font-family: "Open Sans Lite", sans-serif;
+  font-size: 2em;
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 1;
+}
+
+.service-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: -$playerSeparatorWidth;
+  width: 50vw;
+  height: 16.5%;
+  padding: 10px 0;
+  background: rgba(128, 116, 255, .4);
+  color: rgb(214, 214, 214);
+  font-family: "Open Sans Lite", sans-serif;
+  font-size: 2.8em;
+  text-transform: uppercase;
+  transition: left $serviceAnimationDuration;
+  animation-fill-mode: forwards;
+  animation-duration: $serviceMovingDuration;
+  transform: none;
+  z-index: 10;
+
+  @keyframes moveLeft {
+    0% {
+      transform: skewX(0deg) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: skewX($serviceMovingSkew) scale($serviceMovingScale);
+      opacity: $serviceMovingOpacity;
+    }
+    100% {
+      transform: skewX(0deg) scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes moveRight {
+    0% {
+      transform: skewX(0deg) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: skewX(-$serviceMovingSkew) scale($serviceMovingScale);
+      opacity: $serviceMovingOpacity;
+    }
+    100% {
+      transform: skewX(0deg) scale(1);
+      opacity: 1;
+    }
+  }
+
+  &.left {
+    animation-name: moveLeft;
+  }
+
+  &.right {
+    left: 50vw;
+
+    animation-name: moveRight;
+  }
+
+  &.initial {
+    animation-name: none;
+  }
+
+  .service-indicator-icon {
+    margin-right: 20px;
+    color: rgba(255, 255, 255, .2);
+  }
+}
+
+.game.waiting-for-start {
+  .player-side.player-left {
+    border-color: transparent;
+  }
+}
+
+/* winner animation */
+
+@keyframes animateWinner {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes animateScoreSeparator {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.winner-wrapper {
+  position: absolute;
+  left: 5vw;
+  top: 11vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+
+  .winner {
+    width: 0;
+    background: rgb(5, 156, 51);
+    font-family: "Open Sans", sans-serif;
+    font-size: 2em;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 1s;
+    overflow: hidden;
+    white-space: nowrap;
+    animation-name: animateWinner;
+    animation-delay: 1s;
+    animation-duration: 1.3s;
+    animation-fill-mode: forwards;
+    z-index: 3;
+  }
+}
+
+.score-separator {
+  position: absolute;
+  left: 48.5vw;
+  top: 42vh;
+  color: #fff;
+  font-size: 7em;
+  font-family: 'Righteous', cursive;
+  opacity: 0;
+  animation-name: animateScoreSeparator;
+  animation-delay: 1s;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  z-index: 3;
+}
+
+.game.show-winner {
+
+  .player-side {
+    border-color: transparent;
+  }
+
+  .service-indicator {
+    transition: bottom 1s;
+    bottom: -20vh;
+  }
+
+  &.winner-left {
+    .player-side.player-right .player-name {
+      top: -10vh;
+    }
+
+    .player-side.player-left .player-name {
+      width: 100vw;
+      top: 13vh;
+      font-size: 4em;
+      padding-top: 2vh;
+    }
+
+    .player-side.player-left .player-score-black-box {
+      left: 50vw - $playerScoreBoxSize;
+    }
+
+    .player-side.player-right .player-score-black-box {
+      left: 0;
+    }
+  }
+
+  &.winner-right {
+    .player-side.player-left .player-name {
+      top: -10vh;
+    }
+
+    .player-side.player-right .player-name {
+      width: 100vw;
+      top: 13vh;
+      left: -50vw;
+      font-size: 4em;
+      padding-top: 2vh;
+    }
+
+    .player-side.player-left .player-score-black-box {
+      left: 50vw;
+    }
+
+    .player-side.player-right .player-score-black-box {
+      left: -$playerScoreBoxSize;
+    }
+  }
 }
