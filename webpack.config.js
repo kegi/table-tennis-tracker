@@ -6,7 +6,7 @@ const postcssNormalize = require('postcss-normalize')
 const buildDirectory = 'dist'
 
 const extractedStyles = new ExtractTextPlugin({
-  filename: '[name].bundle.css'
+  filename: '[name].bundle.css',
 })
 
 /**
@@ -26,7 +26,7 @@ const getStylesLoaders = (handleAsModules = false) => {
   /* sass */
 
   loaders.unshift({
-    loader: 'sass-loader'
+    loader: 'sass-loader',
   })
 
   /* postcss */
@@ -36,9 +36,9 @@ const getStylesLoaders = (handleAsModules = false) => {
     options: {
       ident: 'postcss',
       plugins: () => [
-        postcssNormalize()
-      ]
-    }
+        postcssNormalize(),
+      ],
+    },
   })
 
   /* handle css */
@@ -47,34 +47,33 @@ const getStylesLoaders = (handleAsModules = false) => {
     loader: 'css-loader',
     options: {
       importLoaders: 1,
-      modules: handleAsModules
-    }
+      modules: handleAsModules,
+    },
   })
 
   /* typing (if handleAsModules) */
 
   if (handleAsModules) {
     loaders.unshift({
-      loader: 'css-modules-typescript-loader'
+      loader: 'css-modules-typescript-loader',
     })
   }
 
   return extractedStyles.extract({
-    use: loaders
+    use: loaders,
   })
 }
 
 module.exports = [
   {
-
     entry: {
-      main: './src/index.tsx'
+      main: './src/index.tsx',
     },
 
     output: {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, buildDirectory),
-      publicPath: `/${buildDirectory}/`
+      publicPath: `${buildDirectory}/`,
     },
 
     module: {
@@ -87,12 +86,12 @@ module.exports = [
           exclude: /node_modules/,
           use: [
             {
-              loader: 'babel-loader'
+              loader: 'babel-loader',
             },
             {
-              loader: 'eslint-loader'
-            }
-          ]
+              loader: 'eslint-loader',
+            },
+          ],
         },
 
         /* CSS + SASS */
@@ -101,51 +100,72 @@ module.exports = [
           test: /\.s?css$/,
           exclude: [
             /\.module\.s?css$/,
-            /node_modules/
+            /node_modules/,
           ],
-          use: getStylesLoaders(false)
+          use: getStylesLoaders(false),
         },
 
         {
           test: /\.module\.s?css$/,
           exclude: [
-            /node_modules/
+            /node_modules/,
           ],
-          use: getStylesLoaders(true)
+          use: getStylesLoaders(true),
         },
 
         /* Images */
 
         {
           test: /\.(png|jpg|jpeg|bmp|gif)$/,
-          loader: 'file-loader'
+          loader: 'file-loader',
+          options: {
+            publicPath: (url) => url,
+          },
+        },
+
+        /* Medias */
+
+        {
+          test: /\.(mp4|wav)$/,
+          loader: 'file-loader',
+          options: {
+            options: {
+              publicPath: (url) => url,
+            },
+          },
         },
 
         /* Fonts */
 
         {
-          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file-loader',
+          options: {
+            publicPath: (url) => url,
+          },
         },
 
         {
-          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          loader: 'file-loader'
-        }
-      ]
+          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+          options: {
+            publicPath: (url) => url,
+          },
+        },
+      ],
     },
 
     plugins: [
       extractedStyles,
-      new CleanWebpackPlugin()
+      new CleanWebpackPlugin(),
     ],
 
     resolve: {
-      extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css']
+      extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
     },
 
     performance: {
-      hints: false
+      hints: false,
     },
 
     devServer: {
@@ -155,8 +175,8 @@ module.exports = [
       historyApiFallback: true,
       watchOptions: {
         ignored: [
-          path.resolve(__dirname, 'node_modules')
-        ]
-      }
-    }
+          path.resolve(__dirname, 'node_modules'),
+        ],
+      },
+    },
   }]
