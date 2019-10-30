@@ -1,7 +1,11 @@
 $playerSeparatorWidth: 3px;
-$playerSeparatorColor: rgba(128, 116, 255, .4);
 $activePlayerAnimationOpacity: .5;
 $activePlayerAnimationDuration: 250ms;
+$playerSeparatorColor: rgba(128, 116, 255, .4);
+$serviceBackgroundColor: rgba(255, 89, 104, 0.43);
+$serviceBackgroundColorLeft: linear-gradient(90deg, rgba(255, 89, 104, 0.6) 0%, rgba(255, 89, 104, 0.4) 50%, rgba(128, 116, 255, 0.4) 100%);
+$serviceBackgroundColorRight: linear-gradient(90deg, rgba(128, 116, 255, 0.4) 0%, rgba(255, 89, 104, 0.4) 50%, rgba(255, 89, 104, 0.6) 100%);
+$serviceColor: rgb(255, 255, 255);
 $serviceMovingSkew: 15deg;
 $serviceMovingScale: .7;
 $serviceMovingOpacity: .6;
@@ -61,7 +65,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: .6;
+    //opacity: .1;
 
     @media (min-aspect-ratio: 16/9) {
       height: 300%;
@@ -145,13 +149,13 @@ body, html {
   width: 50vw;
   display: flex;
   justify-content: center;
-  padding: 10px 0;
+  padding: 4vh 0;
   background: rgba(255, 255, 255, .1);
   color: #fff;
   font-family: "Open Sans", sans-serif;
-  font-size: 2.8em;
+  font-size: 4.25em;
   text-transform: uppercase;
-  transition: all 1s;
+  transition: all 1s, opacity 500ms;
 }
 
 .player-side.player-left .player-name {
@@ -182,7 +186,7 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
   font-family: 'Righteous', cursive;
   padding: $playerScoreVerticalVisibility 0;
   margin-top: -($playerScoreBoxSize / 2);
-  transition: left 500ms;
+  transition: left 500ms, top 500ms;
 }
 
 .player-score-visibility-wrapper {
@@ -268,9 +272,9 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
   bottom: 5vh;
   left: 0;
   right: 0;
-  color: rgba(255, 255, 255, .35);
+  color: rgba(255, 255, 255, .5);
   font-family: "Open Sans Lite", sans-serif;
-  font-size: 2em;
+  font-size: 3em;
   text-transform: uppercase;
   text-align: center;
   z-index: 1;
@@ -286,10 +290,10 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
   width: 50vw;
   height: 16.5%;
   padding: 10px 0;
-  background: rgba(128, 116, 255, .4);
-  color: rgb(214, 214, 214);
-  font-family: "Open Sans Lite", sans-serif;
-  font-size: 2.8em;
+  background: $serviceBackgroundColor;
+  color: $serviceColor;
+  font-family: "Open Sans", sans-serif;
+  font-size: 3.2em;
   text-transform: uppercase;
   transition: left $serviceAnimationDuration;
   animation-fill-mode: forwards;
@@ -329,12 +333,13 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
 
   &.left {
     animation-name: moveLeft;
+    background: $serviceBackgroundColorLeft;
   }
 
   &.right {
     left: 50vw;
-
     animation-name: moveRight;
+    background: $serviceBackgroundColorRight;
   }
 
   &.initial {
@@ -343,7 +348,8 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
 
   .service-indicator-icon {
     margin-right: 20px;
-    color: rgba(255, 255, 255, .2);
+    color: $serviceColor;
+    opacity: .4;
   }
 }
 
@@ -376,7 +382,7 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
 .winner-wrapper {
   position: absolute;
   left: 5vw;
-  top: 11vh;
+  top: 10vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -386,7 +392,8 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
     width: 0;
     background: rgb(5, 156, 51);
     font-family: "Open Sans", sans-serif;
-    font-size: 2em;
+    font-size: 2.5em;
+    font-weight: 600;
     text-transform: uppercase;
     text-align: center;
     transition: all 1s;
@@ -426,16 +433,20 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
     bottom: -20vh;
   }
 
+  .player-score-black-box {
+    top: 55vh;
+  }
+
   &.winner-left {
     .player-side.player-right .player-name {
-      top: -10vh;
+      opacity: 0;
     }
 
     .player-side.player-left .player-name {
       width: 100vw;
       top: 13vh;
-      font-size: 4em;
-      padding-top: 2vh;
+      font-size: 5.5em;
+      padding: 2vh 0;
     }
 
     .player-side.player-left .player-score-black-box {
@@ -449,15 +460,15 @@ $playerScoreDiff: ($playerScoreBoxSize - ($playerScoreDigitHeight + ($playerScor
 
   &.winner-right {
     .player-side.player-left .player-name {
-      top: -10vh;
+      opacity: 0;
     }
 
     .player-side.player-right .player-name {
       width: 100vw;
       top: 13vh;
       left: -50vw;
-      font-size: 4em;
-      padding-top: 2vh;
+      font-size: 5.5em;
+      padding: 2vh 0;
     }
 
     .player-side.player-left .player-score-black-box {

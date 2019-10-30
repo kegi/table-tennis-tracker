@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import background from '../../assets/videos/background2.mp4'
+import background from '../../assets/videos/background1.mp4'
 import winnerBackground from '../../assets/videos/winner.mp4'
 
 interface AnimatedBackgroundProps {
